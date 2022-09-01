@@ -1,4 +1,4 @@
-use std::io::{self, Read};
+use std::io::{self};
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
