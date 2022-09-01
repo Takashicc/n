@@ -7,7 +7,7 @@ pub struct Editor {}
 
 impl Editor {
     pub fn new() -> Self {
-        Editor {}
+        Self {}
     }
 
     pub fn run(&self) {
@@ -25,12 +25,12 @@ impl Editor {
                     Key::Ctrl('q') => break,
                     _ => todo!(),
                 },
-                Err(err) => die(err),
+                Err(err) => die(&err),
             }
         }
     }
 }
 
-fn die(e: io::Error) {
+fn die(e: &io::Error) {
     panic!("{:?}", e);
 }
