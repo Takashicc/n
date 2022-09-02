@@ -3,30 +3,42 @@ use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 
-pub struct Editor {}
+pub struct Editor {
+    quit: bool,
+}
 
 impl Editor {
     pub fn new() -> Self {
-        Self {}
+        Self { quit: false }
     }
 
-    pub fn run(&self) {
+    pub fn run(&mut self) {
         let _stdout = io::stdout().into_raw_mode().unwrap();
-        for b in io::stdin().keys() {
-            match b {
-                Ok(b) => match b {
-                    Key::Char(c) => {
-                        if c.is_control() {
-                            println!("{:?}\r", c as u8);
-                        } else {
-                            println!("{:?} ({})\r", c as u8, c);
-                        }
-                    }
-                    Key::Ctrl('q') => break,
-                    _ => todo!(),
-                },
-                Err(err) => die(&err),
+
+        loop {
+            if let Err(err) = self.process_keypress() {
+                die(&err);
             }
+            if self.quit {
+                break;
+            }
+        }
+    }
+
+    fn process_keypress(&mut self) -> Result<(), io::Error> {
+        match read_key()? {
+            Key::Ctrl('q') => self.quit = true,
+            _ => (),
+        }
+
+        Ok(())
+    }
+}
+
+fn read_key() -> Result<Key, io::Error> {
+    loop {
+        if let Some(key) = io::stdin().lock().keys().next() {
+            return key;
         }
     }
 }
