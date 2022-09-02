@@ -16,7 +16,7 @@ impl Editor {
         let _stdout = io::stdout().into_raw_mode().unwrap();
 
         loop {
-            if let Err(err) = self.clear_screen() {
+            if let Err(err) = clear_screen() {
                 die(&err);
             }
 
@@ -30,11 +30,6 @@ impl Editor {
         }
     }
 
-    fn clear_screen(&self) -> Result<(), io::Error> {
-        print!("{}", termion::clear::All);
-        io::stdout().flush()
-    }
-
     fn process_keypress(&mut self) -> Result<(), io::Error> {
         match read_key()? {
             Key::Ctrl('q') => self.quit = true,
@@ -43,6 +38,11 @@ impl Editor {
 
         Ok(())
     }
+}
+
+fn clear_screen() -> Result<(), io::Error> {
+    print!("{}", termion::clear::All);
+    io::stdout().flush()
 }
 
 fn read_key() -> Result<Key, io::Error> {
