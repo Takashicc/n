@@ -41,7 +41,11 @@ impl Editor {
 }
 
 fn clear_screen() -> Result<(), io::Error> {
-    print!("{}", termion::clear::All);
+    print!(
+        "{}{}",
+        termion::clear::All,
+        termion::cursor::Goto::default()
+    );
     io::stdout().flush()
 }
 
